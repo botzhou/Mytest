@@ -1,27 +1,25 @@
 import pymysql
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import Column,String,create_engine,INT
+from sqlalchemy.ext.declarative import declarative_base
 
-# Connect to the database
-connection = pymysql.connect(host='localhost',
-                             user='root',
-                             password='275265zt',
-                             db='gd_blog',
-                             charset='utf8mb4',
-                             cursorclass=pymysql.cursors.DictCursor)
-cursor = connection.cursor()
-def addUser(sys_user,login_id,password,registertime):
-    sql = "INSERT INTO sys_user (sys_user, login_id,password,registertime) VALUES ('%s','%s','%s','%s')"%(sys_user,login_id,password,registertime)
-    cursor.execute(sql)
-    connection.commit()
-    cursor.close()
+Base = declarative_base()
 
-def addTestUser(id,name):
-    sql = "INSERT INTO test_table (id,name) VALUES ('%s','%s')"%(id,name)
-    cursor.execute(sql)
-    connection.commit()
-    cursor.close()
+class User(Base):
+    __tablename__ = 'user'
 
-def addTestUserTest(name,password):
-    sql = "INSERT INTO test_table2 (name,password) VALUES ('%s','%s')"%(name,password)
-    cursor.execute(sql)
-    connection.commit()
-    cursor.close()
+    idUser = Column(INT,primary_key=True)
+    email = Column(String(45))
+    sex = Column(INT)
+    username = Column(String(45))
+    password = Column(String(45))
+
+engine = create_engine('mysql+pymysql://root:Zhaoyun0218@localhost:3306/world')
+DBSession = sessionmaker(bind=engine)
+
+
+session = DBSession()
+user1 = User(idUser='10000001',email='277168645@qq.com',sex='1',username='zhaoting',password='123456')
+session.add(user1)
+session.commit()
+session.close()
